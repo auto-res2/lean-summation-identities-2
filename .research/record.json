@@ -99,11 +99,26 @@
                     "module": "Airas.GaussSum",
                     "decl": "gauss_sum_mul_two",
                     "statement": "∀ (n : ℕ), 2 * ∑ i ∈ Finset.range (n + 1), i = n * (n + 1)"
-                  }
+                  },
+                  "results": [
+                    {
+                      "commit": "b3f04fa76e3f2ac3ddc6d421daadc3d1caaaf4b2",
+                      "toolchain": "leanprover/lean4:v4.33.1",
+                      "mathlib_rev": "0df444a360eaa60ab8c11dca51a86af692955474",
+                      "statement": "∀ (n : ℕ), 2 * ∑ i ∈ Finset.range (n + 1), i = n * (n + 1)",
+                      "axioms": [
+                        "Classical.choice",
+                        "Quot.sound",
+                        "propext"
+                      ]
+                    }
+                  ]
                 }
               ]
             }
-          ]
+          ],
+          "verified": true,
+          "verdict": "supported"
         },
         {
           "id": "c2",
@@ -126,11 +141,26 @@
                     "module": "Airas.OddSum",
                     "decl": "odd_sum_eq_sq",
                     "statement": "∀ (n : ℕ), ∑ i ∈ Finset.range n, (2 * i + 1) = n ^ 2"
-                  }
+                  },
+                  "results": [
+                    {
+                      "commit": "b3f04fa76e3f2ac3ddc6d421daadc3d1caaaf4b2",
+                      "toolchain": "leanprover/lean4:v4.33.1",
+                      "mathlib_rev": "0df444a360eaa60ab8c11dca51a86af692955474",
+                      "statement": "∀ (n : ℕ), ∑ i ∈ Finset.range n, (2 * i + 1) = n ^ 2",
+                      "axioms": [
+                        "Classical.choice",
+                        "Quot.sound",
+                        "propext"
+                      ]
+                    }
+                  ]
                 }
               ]
             }
-          ]
+          ],
+          "verified": true,
+          "verdict": "supported"
         }
       ],
       "notes": [
