@@ -1,0 +1,3 @@
+kind: lean
+module: Airas.GaussSum
+decl: gauss_sum_mul_two
