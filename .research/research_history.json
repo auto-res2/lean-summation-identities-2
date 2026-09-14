@@ -1,1 +1,152 @@
-{}
+{
+  "research_topic": "Lean 4 と mathlib による古典的総和恒等式の形式証明を、事前登録型の研究フローで検証する",
+  "queries": [
+    "Lean 4 mathlib formalization",
+    "formal proof summation identities induction",
+    "interactive theorem proving verified mathematics"
+  ],
+  "research_study_list": [
+    {
+      "title": "Herald: A Natural Language Annotated Lean 4 Dataset",
+      "abstract": "Translates the Mathlib4 corpus into natural language and trains a translator that formalizes statements (96.7% Pass@128 on miniF2F-test). Abstract only.",
+      "meta_data": {
+        "venue": "iclr",
+        "published_date": "2025",
+        "authors": [
+          "Guoxiong Gao",
+          "Yutong Wang",
+          "Jiedong Jiang",
+          "Qi Gao",
+          "Zihan Qin",
+          "Tianyi Xu",
+          "Bin Dong"
+        ]
+      }
+    },
+    {
+      "title": "Lean Workbook: A large-scale Lean problem set formalized from natural language math problems",
+      "abstract": "A synthetic-data pipeline that translates natural-language math problems into Lean 4 statements; 57K formal-informal pairs. Abstract only.",
+      "meta_data": {
+        "venue": "neurips",
+        "published_date": "2024",
+        "authors": [
+          "Huaiyuan Ying",
+          "Zijian Wu",
+          "Yihan Geng",
+          "JIayu Wang",
+          "Dahua Lin",
+          "Kai Chen"
+        ]
+      }
+    },
+    {
+      "title": "miniCTX: Neural Theorem Proving with (Long-)Contexts",
+      "abstract": "Benchmark of Lean theorems from real projects whose proofs depend on repository context. Abstract only.",
+      "meta_data": {
+        "venue": "iclr",
+        "published_date": "2025",
+        "authors": [
+          "Jiewen Hu",
+          "Thomas Zhu",
+          "Sean Welleck"
+        ]
+      }
+    },
+    {
+      "title": "Draft, Sketch, and Prove: Guiding Formal Theorem Provers with Informal Proofs",
+      "abstract": "Maps informal proofs to formal proof sketches to guide an automated prover (20.9% to 39.3% on competition problems). Abstract only.",
+      "meta_data": {
+        "venue": "iclr",
+        "published_date": "2023",
+        "authors": [
+          "Qiaochu Jiang",
+          "Sean Welleck",
+          "Jin Zhou",
+          "Timothée Lacroix",
+          "Jiacheng Liu",
+          "Wenda Li",
+          "Mateja Jamnik",
+          "Guillaume Lample",
+          "Yuhuai Wu"
+        ]
+      }
+    },
+    {
+      "title": "Proving Theorems Recursively",
+      "abstract": "POETRY proves theorems level by level in Isabelle, deferring sub-conjectures with sorry placeholders. Abstract only.",
+      "meta_data": {
+        "venue": "neurips",
+        "published_date": "2024",
+        "authors": [
+          "Haiming Wang",
+          "Huajian Xin",
+          "Zhengying Liu",
+          "Wenda Li",
+          "Yinya Huang",
+          "Jianqiao Lu",
+          "Zhicheng Yang",
+          "Jing Tang",
+          "Jian Yin",
+          "Zhenguo Li",
+          "Xiaodan Liang"
+        ]
+      }
+    },
+    {
+      "title": "Summation in Finite Terms",
+      "abstract": "Karr's algorithm decides whether a first-order linear difference equation has a symbolic solution; the classical algorithmic treatment of closed forms for finite sums. Abstract only.",
+      "meta_data": {
+        "venue": "Journal of the ACM",
+        "published_date": "1981-04-01",
+        "doi": "10.1145/322248.322255",
+        "authors": [
+          "Michael Karr"
+        ]
+      }
+    }
+  ],
+  "research_hypothesis": {
+    "open_problems": "機械学習分野の AI 研究自動化（AIRAS）は、実験系の主張を実行結果と provenance で検証する枠組みを持つが、理論系の主張（定理）を同じ枠組みで検証した例がない。定理の主張を事前登録し、証明の検証を隔離環境で行い、その結果だけを論文に取り込む流れが成立するかは未確認である。",
+    "method": "定理の型（statement）を record.json に claim として事前登録し、証明は後から Lean 4（mathlib pin 済み）で書く。GitHub Actions 上の `make run` が `lake build` と `lake exe airas-report` で lean.json（宣言の型・依存公理・エラー）を書き、import_run_outputs が provenance 付きで取り込む。update_record が lean.json から verdict（supported / inconclusive）を導き、論文はその結果だけを参照する。",
+    "experimental_setup": "対象は初等的な総和恒等式 2 つ。c1: 2·Σ_{i<n+1} i = n(n+1)（ガウスの和）、c2: Σ_{i<n} (2i+1) = n²（奇数の和）。いずれも ℕ 上で数学的帰納法により証明する。許容公理は Lean の標準 3 公理（propext, Classical.choice, Quot.sound）。実行基盤は GitHub Actions（ubuntu-latest, x86_64, CPU）。toolchain は leanprover/lean4:v4.33.1、mathlib は v4.33.1（0df444a3）。",
+    "primary_metric": "lean_verdict",
+    "supporting_metrics": [
+      "axioms"
+    ],
+    "expected_result": "2 つの claim がともに sorry 無しでビルドされ、依存公理が標準 3 公理の部分集合に収まり、verdict が supported になる。予想される依存公理は propext のみか空集合。",
+    "expected_conclusion": "理論系の主張も、実験系と同じ事前登録・隔離実行・provenance 照合の流れで検証できる。凍結した statement と実際にビルドされた型の一致が、主張の書き換えを検出する要になる。"
+  },
+  "experiment_history": {
+    "cycles": [
+      {
+        "run_stage": "full",
+        "experimental_design": {
+          "experiment_summary": "run_id ごとに 1 宣言。gauss-sum: module Airas.GaussSum, decl gauss_sum_mul_two, statement ∀ (n : ℕ), 2 * ∑ i ∈ Finset.range (n + 1), i = n * (n + 1)。odd-sum: module Airas.OddSum, decl odd_sum_eq_sq, statement ∀ (n : ℕ), ∑ i ∈ Finset.range n, (2 * i + 1) = n ^ 2。両方を GitHub Actions で full stage として実行し、lean.json を取り込む。",
+          "proposed_method": {
+            "method_name": "Lean4-mathlib-induction",
+            "description": "Finset.sum_range_succ による帰納法と ring で閉じる初等証明"
+          },
+          "comparative_methods": [],
+          "evaluation_metrics": [
+            {
+              "name": "lean_verdict",
+              "description": "update_record が lean.json から導く verdict。errors が空なら supported、ビルド失敗・sorry・statement 不一致・許可外公理なら inconclusive。Lean は反証しない。"
+            },
+            {
+              "name": "axioms",
+              "description": "collectAxioms が返す依存公理の集合。allowed_axioms（標準 3 公理）の部分集合であること。"
+            }
+          ],
+          "models_to_use": [],
+          "datasets_to_use": [],
+          "compute_environment": {
+            "description": "GitHub Actions ubuntu-latest",
+            "arch": "x86_64",
+            "gpu_count": 0,
+            "os": "Linux"
+          }
+        }
+      }
+    ]
+  }
+}
