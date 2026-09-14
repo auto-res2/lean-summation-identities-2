@@ -1,0 +1,17 @@
+{
+  "dirs": {
+    "gauss-sum": {
+      "execution_id": "34870248086",
+      "backend": "github_actions",
+      "commit_hash": "b3f04fa76e3f2ac3ddc6d421daadc3d1caaaf4b2",
+      "overrides": {
+        "mode": "full"
+      },
+      "parameters": {},
+      "files": {
+        ".research/results/gauss-sum/build.txt": "7b43d092139a7c5278355f298f936368c4eff9d2fc4d2c2effc8cf9d71209795",
+        ".research/results/gauss-sum/lean.json": "578bef29cfa5a2ca2482681d911808d44095c2639414ff80d6f7be19a08558db"
+      }
+    }
+  }
+}
