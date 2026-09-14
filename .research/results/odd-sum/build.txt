@@ -1,0 +1,2 @@
+✔ [3006/3006] Built Airas.OddSum (2.3s)
+Build completed successfully (3006 jobs).

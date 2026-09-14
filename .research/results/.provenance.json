@@ -12,6 +12,19 @@
         ".research/results/gauss-sum/build.txt": "7b43d092139a7c5278355f298f936368c4eff9d2fc4d2c2effc8cf9d71209795",
         ".research/results/gauss-sum/lean.json": "578bef29cfa5a2ca2482681d911808d44095c2639414ff80d6f7be19a08558db"
       }
+    },
+    "odd-sum": {
+      "execution_id": "34870252685",
+      "backend": "github_actions",
+      "commit_hash": "b3f04fa76e3f2ac3ddc6d421daadc3d1caaaf4b2",
+      "overrides": {
+        "mode": "full"
+      },
+      "parameters": {},
+      "files": {
+        ".research/results/odd-sum/build.txt": "82a247ce998790301ea7f9bc8d0b98ed8e70620ff85a25f824d2ca0f02f74778",
+        ".research/results/odd-sum/lean.json": "4a63f8bfbd02fbff24e649226d76c6933143d4c47e266c79fc1a12eb422ff83b"
+      }
     }
   }
 }
