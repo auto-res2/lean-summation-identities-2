@@ -80,15 +80,28 @@ Each run is dispatched to GitHub Actions on an \texttt{ubuntu-latest} runner (x8
 % ===== airas: post-experiment sections, filled once runs exist =====
 \section{Results}
 
-Results are filled in after the runs have executed and been imported.
+Both claims were realized from the imported reports and both are \emph{supported}; the verdicts appear in the claim list of Section~5, which is regenerated from the record at every verification. For each run the report shows an empty error list, no warnings (so no \texttt{sorry}), and a built type identical to the frozen statement up to whitespace: the declarations were built for exactly the types that were preregistered, and neither claim needed to be appended again.
+
+The two proofs depend on the same three axioms, \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound} --- the standard axioms of Lean's core library, and exactly the allowed set declared for both claims. The preregistration expected \texttt{propext} at most; the difference is discussed below.
+
+Each run executed on GitHub Actions in the repository's Docker image (elan with the pinned toolchain \texttt{leanprover/lean4:v4.33.1} and mathlib \unverified{\texttt{0df444a3}}) on an \texttt{ubuntu-latest} runner, on commit \unverified{\texttt{b3f04fa7}}, a descendant of the freeze commit \unverified{\texttt{43bcd949}}. The provenance manifest names the workflow runs (\unverified{34870248086} for \texttt{gauss-sum}, \unverified{34870252685} for \texttt{odd-sum}), the commit each executed, the dispatch stage (\texttt{full}) and the SHA-256 of every imported file; the verification gate byte-compares the imported reports against the runs' artifacts. Values quoted in this paragraph are transcribed from that manifest and marked as unverified, because the record has no declared value for them.
 
 \section{Discussion}
 
-Discussion is filled in after the runs have executed and been imported.
+\paragraph{The flow transfers.} Nothing in the preregistration, execution and verification machinery had to know that the claims were theorems rather than experiments. The claim declared a verifier, a module, a declaration and a frozen type; the same dispatch, status and import tools ran the proof and brought its report back; the same record realization derived the verdict; the same gate checked the record, the rendered claim list and the provenance. The one Lean-specific piece is the fixed report tool that prints the type and collects the axioms, and it is deliberately not written by the author of the proof.
+
+\paragraph{What the frozen statement buys.} The statement is compared as a string with the type Lean prints, so an author has to write it in Lean's printed form (binder notation, mathlib's sum notation, $\mathbb{N}$ as \texttt{\textbackslash bbN}). Here the hand-written statements matched on the first build. A mismatch would have made the claim inconclusive and forced a visible revision under the same identifier --- which is the intended behaviour, but it also means a purely notational slip costs a round of re-freezing. Comparing the declared statement by elaborating it in Lean and checking definitional equality with the built type would remove that fragility without weakening the freeze.
+
+\paragraph{Axioms.} The expectation of \texttt{propext} at most was wrong: the tactics used (\texttt{simp}, \texttt{ring}) and mathlib's lemma \texttt{Finset.sum\_range\_succ} route through classical reasoning and quotient soundness. The proofs are no less valid for it --- the three axioms are the standard ones and were declared as allowed --- but it shows that the axiom set is worth predicting with the actual tactic vocabulary in mind, and that a claim wanting a constructive proof must say so in \texttt{allowed\_axioms}.
+
+\paragraph{What broke, and what it says about the flow.} Two failures occurred before the reported runs, both outside the Lean pipeline. The repository's Python lockfile shipped out of sync with its project file, so the Docker image failed to build and the workflow fell back to native execution, where no Lean toolchain exists; the first pair of runs failed there. Refreshing the lockfile fixed it. Separately, the journal template's logo is shipped as EPS, which the non-shell-escape build in CI cannot convert, so the first paper build on the protected branch failed until a converted logo was added. Neither failure could have produced a wrong verdict --- a failed run simply has no report --- but both show that the execution environment is part of the claim's reproducibility and should be checked before a proof is written.
+
+\paragraph{Limitations.} Lean does not refute: a claim whose proof fails is inconclusive, not false, so the hypothesis could only have been supported or left open. The gate does not yet rebuild the proof itself; it checks that the imported report is the run's and that the record matches it, so the chain of trust runs through the workflow run and its artifact rather than through an independent re-derivation. The identities are elementary and the proofs short; the exercise tests the flow, not the difficulty of formalization. The faithfulness of each formal statement to its informal identity remains an assumption, as declared.
 
 \section{Conclusions}
 
-Conclusions are filled in after the runs have executed and been imported.
+Two summation identities were preregistered as Lean claims, proved after the freeze, built in an isolated GitHub Actions run, and reported only through the record realized from the run's report. Both claims are supported, with the built types equal to the frozen statements and the axioms within the declared set. The AIRAS integrity flow, built for experiments, carried a theoretical claim end to end without changes to its verification rules; the residual work is on the edges --- semantic rather than textual comparison of the frozen statement, and a gate that re-derives the report by rebuilding the proof.
+
 % ===== airas: end of post-experiment sections =====
 
 \vspace{6pt}

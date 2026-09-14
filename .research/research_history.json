@@ -145,6 +145,38 @@
             "gpu_count": 0,
             "os": "Linux"
           }
+        },
+        "experimental_results": {
+          "metrics_data": {
+            "gauss-sum": {
+              "verdict": "supported",
+              "axioms": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ],
+              "errors": [],
+              "statement_matches_frozen": true
+            },
+            "odd-sum": {
+              "verdict": "supported",
+              "axioms": [
+                "Classical.choice",
+                "Quot.sound",
+                "propext"
+              ],
+              "errors": [],
+              "statement_matches_frozen": true
+            }
+          },
+          "stdout": "GitHub Actions runs 34870248086 (gauss-sum) and 34870252685 (odd-sum), both at commit b3f04fa7, Docker path (elan + leanprover/lean4:v4.33.1, mathlib 0df444a3). lake build succeeded; lake exe airas-report wrote lean.json with no errors and no warnings."
+        },
+        "experimental_analysis": {
+          "analysis_report": "2 つの Lean claim はどちらも full stage で sorry 無しにビルドされ、report の statement は凍結した params.statement と（空白を除き）完全に一致した。update_record は c1・c2 を verified=true、verdict=supported と導いた。依存公理はどちらも {propext, Classical.choice, Quot.sound} で、allowed_axioms（標準 3 公理）の範囲内だが、事前の予想（propext のみか空集合）よりは多い。帰納法の各段で使った simp / ring と mathlib の Finset.sum_range_succ が古典論理と商型の公理を経由するためで、証明の妥当性には影響しない。運用面では、(1) 最初の dispatch は template 同梱の uv.lock が pyproject.toml と不整合で Docker build が落ち、native フォールバック（elan 無し）で失敗した。uv lock の更新後に再 dispatch して成功した。(2) 凍結した statement は手書きだったが、Lean の印字と一致したので append による再凍結は不要だった。(3) gate は lean.json と record の一致と artifact とのバイト比較までで、gate 自身による再ビルドは未実装（airas-org/airas#1020）。"
+        },
+        "decision": {
+          "action": "complete",
+          "reasoning": "両 claim が supported で、仮説 h1 の 2 つの実例が揃った。追加の run は不要。"
         }
       }
     ]
