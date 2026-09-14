@@ -1,1 +1,73 @@
-{}
+{
+  "hypotheses": [
+    {
+      "id": "h1",
+      "statement": "初等的な総和恒等式（ガウスの和と奇数の和）は、Lean 4 と mathlib の標準公理のみに依存して数学的帰納法により形式証明でき、その検証は実験と同じ事前登録・隔離実行・provenance 照合の流れで行える。",
+      "assumptions": [
+        "c1 と c2 の statement が、それぞれの恒等式の意図した数学的内容を忠実に形式化している（形式化の忠実性は Lean が検証しない）。",
+        "Lean 4 v4.33.1 と mathlib v4.33.1 のカーネルおよび report ツール（airas-report）が正しく、collectAxioms の返す公理集合が完全である。",
+        "GitHub Actions 上の実行が、record が宣言した commit の子孫で行われている（provenance 照合が依拠する前提）。"
+      ],
+      "claims": [
+        {
+          "id": "c1",
+          "statement": "ガウスの和 2·Σ_{i<n+1} i = n(n+1) は、すべての自然数 n について Lean 4 で sorry 無しに証明され、依存公理は標準 3 公理に収まる。",
+          "rationale": "h1 の『初等的な総和恒等式が標準公理のみで形式証明できる』の第一の実例。等差数列の和という最も基本的な恒等式で、帰納法と Finset.sum_range_succ だけで閉じるはず。",
+          "verifier": {
+            "kind": "lean",
+            "toolchain": "leanprover/lean4:v4.33.1",
+            "mathlib_rev": "0df444a360eaa60ab8c11dca51a86af692955474"
+          },
+          "designs": [
+            {
+              "id": "d1",
+              "summary": "Airas.GaussSum に宣言 gauss_sum_mul_two を置き、帰納法で証明する。GitHub Actions の full stage で lake build と airas-report を走らせる。",
+              "runs": [
+                {
+                  "run_id": "gauss-sum",
+                  "description": "gauss_sum_mul_two のビルドと report",
+                  "params": {
+                    "module": "Airas.GaussSum",
+                    "decl": "gauss_sum_mul_two",
+                    "statement": "∀ (n : ℕ), 2 * ∑ i ∈ Finset.range (n + 1), i = n * (n + 1)"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "c2",
+          "statement": "奇数の和 Σ_{i<n} (2i+1) = n² は、すべての自然数 n について Lean 4 で sorry 無しに証明され、依存公理は標準 3 公理に収まる。",
+          "rationale": "h1 の第二の実例。c1 と独立な恒等式で、同じ帰納法の型で閉じることが、手法が特定の恒等式に依存しないことの証拠になる。",
+          "verifier": {
+            "kind": "lean",
+            "toolchain": "leanprover/lean4:v4.33.1",
+            "mathlib_rev": "0df444a360eaa60ab8c11dca51a86af692955474"
+          },
+          "designs": [
+            {
+              "id": "d1",
+              "summary": "Airas.OddSum に宣言 odd_sum_eq_sq を置き、帰納法で証明する。GitHub Actions の full stage で lake build と airas-report を走らせる。",
+              "runs": [
+                {
+                  "run_id": "odd-sum",
+                  "description": "odd_sum_eq_sq のビルドと report",
+                  "params": {
+                    "module": "Airas.OddSum",
+                    "decl": "odd_sum_eq_sq",
+                    "statement": "∀ (n : ℕ), ∑ i ∈ Finset.range n, (2 * i + 1) = n ^ 2"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "notes": [
+        "statement は Lean が印字する形（∀ の束縛子、mathlib の ∑ 記法、ℕ）で手書きした。ビルドされた型の印字と表記がずれた場合は inconclusive になり、同じ id で append して凍結し直す。これはこの方式の弱点として報告対象。",
+        "Lean は反証しない。verdict は supported か inconclusive のどちらかで、refuted は出ない。"
+      ]
+    }
+  ]
+}
